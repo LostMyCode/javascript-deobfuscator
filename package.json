@@ -1,5 +1,6 @@
 {
   "name": "javascript-deobfuscator",
+  "description": "Deobfuscation tool for obfuscated JavaScript Codes using Obfuscator.io",
   "version": "0.1.0",
   "private": true,
   "scripts": {

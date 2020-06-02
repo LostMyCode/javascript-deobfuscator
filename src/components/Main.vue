@@ -12,10 +12,10 @@
       />
     </div>
     <div class="form-group mb-4 text-left">
-      <label for="exampleFormControlTextarea1">Input</label>
+      <label for="codeInputTextarea">Input</label>
       <textarea
         class="form-control"
-        id="exampleFormControlTextarea1"
+        id="codeInputTextarea"
         rows="5"
         v-model="mainCode"
       ></textarea>
@@ -40,10 +40,10 @@
     </div>
 
     <div class="form-group mb-4 text-left">
-      <label for="exampleFormControlTextarea1">Result</label>
+      <label for="codeResultTextarea">Result</label>
       <textarea
         class="form-control"
-        id="exampleFormControlTextarea1"
+        id="codeResultTextarea"
         rows="5"
         v-model="outputCode"
       ></textarea>
