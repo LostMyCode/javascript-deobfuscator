@@ -1,13 +1,16 @@
 <template>
   <div class="container text-left">
     <h1 class="my-4">JavaScript Deobfuscator</h1>
+
+    <Alert ref="alert"></Alert>
+
     <div class="form-group mb-4 text-left">
       <label for="TargetFuncName">Target function name</label>
       <input
         type="text"
         class="form-control"
         id="TargetFuncName"
-        placeholder="_0x"
+        placeholder="_0x1234"
         v-model="targetName"
       />
     </div>
@@ -17,6 +20,7 @@
         class="form-control"
         id="codeInputTextarea"
         rows="5"
+        placeholder="var _0x14bb=['EMKjwoXCuTB1PsKIbSnDkMKY','RsKLwrHCpQ==','wpPCisOQI ..."
         v-model="mainCode"
       ></textarea>
     </div>
@@ -52,12 +56,17 @@
 </template>
 
 <script>
-// import Decoder from "@/Decoder.js";
+import Analizer from "@/Analizer.js";
+import Alert from "@/components/Alert.vue";
 
 export default {
+  components: {
+    Alert,
+  },
+
   data() {
     return {
-      decoder: null,
+      analizer: null,
       targetName: null,
       mainCode: null,
       outputCode: null,
@@ -68,13 +77,25 @@ export default {
   methods: {
     decode() {
       this.running = true;
+      this.$refs.alert.hide();
+
+      const type = this.analizer.checkType(this.targetName, this.mainCode);
+      if (!type)
+        return this.$refs.alert.showAlert(
+          "danger",
+          "[Error]",
+          "Invalid obfuscation type! Please report to us or try again."
+        );
+
       this.changeProgress(100);
+
       this.axios
         .post(
           "https://us-central1-deobfuscator.cloudfunctions.net/api/request",
           {
             targetName: this.targetName,
-            code: this.mainCode
+            code: this.mainCode,
+            type,
           }
         )
         .then((res) => {
@@ -82,12 +103,22 @@ export default {
           // console.log(res);
           res.data = res.data.replace(/\n/g, "");
           this.changeProgress(0);
+          this.$refs.alert.showAlert(
+            "success",
+            "[Success]",
+            "Successfully decoded the code!!"
+          );
           this.outputCode = window.js_beautify(res.data);
         })
         .catch((e) => {
           this.running = false;
           this.changeProgress(0);
           console.log(e);
+          this.$refs.alert.showAlert(
+            "danger",
+            "[Error]",
+            "Server error! Please check target code and name of target function."
+          );
         });
     },
     changeProgress(rate) {
@@ -99,7 +130,7 @@ export default {
   },
 
   mounted() {
-    // this.decoder = Decoder();
+    this.analizer = Analizer();
   },
 };
 </script>
