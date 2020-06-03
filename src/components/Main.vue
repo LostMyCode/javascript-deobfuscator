@@ -6,6 +6,7 @@
 
     <div class="form-group mb-4 text-left">
       <label for="TargetFuncName">Target function name</label>
+      <a href="#" class="ml-2" @click="toggleTargetFuncTip">How to get?</a>
       <input
         type="text"
         class="form-control"
@@ -14,6 +15,9 @@
         v-model="targetName"
       />
     </div>
+
+    <TargetFuncTip ref="TargetFuncTip"></TargetFuncTip>
+
     <div class="form-group mb-4 text-left">
       <label for="codeInputTextarea">Input</label>
       <textarea
@@ -50,6 +54,7 @@
         id="codeResultTextarea"
         rows="5"
         v-model="outputCode"
+        @click="copyToClipboard"
       ></textarea>
     </div>
   </div>
@@ -58,10 +63,12 @@
 <script>
 import Analizer from "@/Analizer.js";
 import Alert from "@/components/Alert.vue";
+import TargetFuncTip from "@/components/TargetFuncTip.vue";
 
 export default {
   components: {
     Alert,
+    TargetFuncTip,
   },
 
   data() {
@@ -129,6 +136,14 @@ export default {
       }
       document.getElementById("running-progress-bar").style.width = rate + "%";
     },
+    copyToClipboard() {
+      const copyTarget = document.getElementById("codeResultTextarea");
+      copyTarget.select();
+      document.execCommand("Copy");
+    },
+    toggleTargetFuncTip() {
+      this.$refs.TargetFuncTip.toggle();
+    }
   },
 
   mounted() {
