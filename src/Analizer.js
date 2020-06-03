@@ -2,9 +2,9 @@ export default function () {
     const Analizer = {};
 
     Analizer.checkType = function(targetName, code) {
-        let type;
+        let type = null;
         
-        if (typeof type != "string") return type;
+        if (typeof code != "string") return type;
 
         switch (true) {
             case !!code.match(new RegExp(`${targetName}\\[[0-9]+\\]`)):

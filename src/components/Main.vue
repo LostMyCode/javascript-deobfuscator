@@ -80,12 +80,14 @@ export default {
       this.$refs.alert.hide();
 
       const type = this.analizer.checkType(this.targetName, this.mainCode);
-      if (!type)
+      if (type === null) {
         return this.$refs.alert.showAlert(
           "danger",
           "[Error]",
           "Invalid obfuscation type! Please report to us or try again."
-        );
+        ),
+        this.running = false;
+      }
 
       this.changeProgress(100);
 
