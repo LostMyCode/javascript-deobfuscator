@@ -3,6 +3,8 @@
 
 JavaScript Deobfuscation Tool
 
+Demo: [https://sigr.io/deobfuscator/](https://sigr.io/deobfuscator/)
+
 ## Project setup
 ```
 npm install
