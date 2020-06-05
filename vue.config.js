@@ -2,9 +2,11 @@ module.exports = {
     "transpileDependencies": [
     ],
 
+    publicPath: './',
+
     css: {
         extract: {
-            filename: "style.css"
+            filename: "./css/style.css"
         }
     }
 }

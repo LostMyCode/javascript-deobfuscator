@@ -1,4 +1,7 @@
 # javascript-deobfuscator
+![screenshot](https://i.gyazo.com/cc25e38d9a2fb036a7be9415a0c1c51d.png)
+
+JavaScript Deobfuscation Tool
 
 ## Project setup
 ```

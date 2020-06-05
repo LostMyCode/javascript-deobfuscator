@@ -57,6 +57,10 @@
         @click="copyToClipboard"
       ></textarea>
     </div>
+
+    <div class="mb-4">
+      <a href="https://github.com/LostMyCode/javascript-deobfuscator/issues" target="_blank">Feedback (GitHub)</a>
+    </div>
   </div>
 </template>
 
@@ -84,6 +88,7 @@ export default {
   methods: {
     decode() {
       this.running = true;
+      this.outputCode = null;
       this.$refs.alert.hide();
 
       const type = this.analizer.checkType(this.targetName, this.mainCode);
