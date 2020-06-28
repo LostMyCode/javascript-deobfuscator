@@ -14,6 +14,9 @@
       <div class="codeblock">
         <span class="target">_0x439c</span>('0x2','f]Xg')
       </div>
+      <div class="code-example shadow">
+        <img src="../assets/how_to_find_fn.png" class="img-fluid">
+      </div>
       <p class="card-text">
         In this case, target function name is <span class="target">_0x439c</span>
       </p>

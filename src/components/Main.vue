@@ -58,7 +58,7 @@
       ></textarea>
     </div>
 
-    <div class="mb-4">
+    <div class="feedback">
       <a href="https://github.com/LostMyCode/javascript-deobfuscator/issues" target="_blank">Feedback (GitHub)</a>
     </div>
   </div>
@@ -114,7 +114,6 @@ export default {
         )
         .then((res) => {
           this.running = false;
-          // console.log(res);
           res.data = res.data.replace(/\n/g, "");
           this.changeProgress(0);
           this.$refs.alert.showAlert(
@@ -148,7 +147,7 @@ export default {
     },
     toggleTargetFuncTip() {
       this.$refs.TargetFuncTip.toggle();
-    }
+    },
   },
 
   mounted() {
