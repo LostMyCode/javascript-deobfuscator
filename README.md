@@ -3,7 +3,7 @@
 
 JavaScript Deobfuscation Tool
 
-Demo: [https://sigr.io/deobfuscator/](https://sigr.io/deobfuscator/)
+Demo: [https://deo.sigr.io](https://deo.sigr.io)
 
 ## An example of deobfuscation
 
@@ -31,3 +31,16 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## API Server
+API server is hosted by firebase hosting
+
+### Run server on local & built vue project
+```
+firebase serve
+```
+
+### Deploy
+```
+firebase deploy
+```
