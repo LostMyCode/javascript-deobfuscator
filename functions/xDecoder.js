@@ -14,6 +14,17 @@ module.exports = function () {
         }
     }
 
+    Decoder.replaceFormat = function (code) {
+        /* 
+            Replace format
+            aaa["bbb"] or aaa['bbb'] to aaa.bbb
+        */
+        while (code.match(/(\w+)\[("|')(\w+)("|')\]/)) {
+            code = code.replace(/(\w+)\[("|')(\w+)("|')\]/g, "$1.$3");
+        }
+        return code;
+    }
+
     Decoder.decodeType0 = function (targetName, code) { // array like _0xf13b[274] not func
         eval(`var ${targetName} = null`);
         try {
@@ -36,7 +47,7 @@ module.exports = function () {
             regex = defaultRegex;
         }
 
-        return code;
+        return this.replaceFormat(code);
     }
 
     Decoder.decodeType1 = function (targetName, code) { // 1 args like _0xabc('0x00') 
@@ -62,7 +73,7 @@ module.exports = function () {
             regex = defaultRegex;
         }
 
-        return code;
+        return this.replaceFormat(code);
     }
 
     Decoder.decodeType2 = function (targetName, code) { // 2 args like _0xabc('asd', 'asd') RC4
@@ -112,7 +123,7 @@ module.exports = function () {
             regex = defaultRegex;
         }
 
-        return code;
+        return this.replaceFormat(code);
     }
 
     return Decoder;
