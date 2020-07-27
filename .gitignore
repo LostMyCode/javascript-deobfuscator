@@ -16,6 +16,7 @@ firebase-debug.log
 # Editor directories and files
 .idea
 .vscode
+.firebase
 *.suo
 *.ntvs*
 *.njsproj
