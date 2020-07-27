@@ -103,9 +103,13 @@ export default {
 
       this.changeProgress(100);
 
+      const requestURL = window.location.origin.includes("localhost") ?
+        "http://localhost:5001/deobfuscator/us-central1/api/request" :
+        "https://us-central1-deobfuscator.cloudfunctions.net/api/request";
+      
       this.axios
         .post(
-          "https://us-central1-deobfuscator.cloudfunctions.net/api/request",
+          requestURL,
           {
             targetName: this.targetName,
             code: this.mainCode,
