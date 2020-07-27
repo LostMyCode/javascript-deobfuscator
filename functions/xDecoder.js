@@ -76,7 +76,7 @@ module.exports = function () {
         }
 
         const decode = eval(targetName);
-        const quoType = code.match(new RegExp(`${targetName}\\((.)[a-zA-Z0-9]+.,.[^']+.\\)`))[1];
+        const quoType = code.match(new RegExp(`${targetName}\\((.)[a-zA-Z0-9]+.,\\s*.[^']+.\\)`))[1];
         // there are 2 types like _0x4763("0x120b","EEc$") or _0x4763('0x120b','EEc$')
         // so quotation type check is needed
         const regArg = `${targetName}\\(.([a-zA-Z0-9]+).,\\s*.([^${quoType}]+).\\)`;
@@ -107,7 +107,7 @@ module.exports = function () {
                 .replace(/\]/g, "\\]")
                 .replace(/\^/g, "\\^")
                 .replace(/\*/g, "\\*");
-            regex = new RegExp(`${targetName}\\(.${m[1]}.,.${m[2]}.\\)`, "g");
+            regex = new RegExp(`${targetName}\\(.${m[1]}.,\\s*.${m[2]}.\\)`, "g");
             code = code.replace(regex, `'${val}'`);
             regex = defaultRegex;
         }
