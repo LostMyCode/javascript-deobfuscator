@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import Analizer from "@/Analyzer.js";
+import Analyzer from "@/Analyzer.js";
 import Alert from "@/components/Alert.vue";
 import TargetFuncTip from "@/components/TargetFuncTip.vue";
 
@@ -77,7 +77,7 @@ export default {
 
   data() {
     return {
-      analizer: null,
+      analyzer: null,
       targetName: null,
       mainCode: null,
       outputCode: null,
@@ -91,7 +91,7 @@ export default {
       this.outputCode = null;
       this.$refs.alert.hide();
 
-      const type = this.analizer.checkType(this.targetName, this.mainCode);
+      const type = this.analyzer.checkType(this.targetName, this.mainCode);
       if (type === null) {
         return this.$refs.alert.showAlert(
           "danger",
@@ -155,7 +155,7 @@ export default {
   },
 
   mounted() {
-    this.analizer = Analizer();
+    this.analyzer = Analyzer();
   },
 };
 </script>

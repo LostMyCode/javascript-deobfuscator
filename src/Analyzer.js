@@ -1,7 +1,7 @@
 export default function () {
-    const Analizer = {};
+    const Analyzer = {};
 
-    Analizer.checkType = function(targetName, code) {
+    Analyzer.checkType = function(targetName, code) {
         let type = null;
         
         if (typeof targetName != "string" || typeof code != "string") return type;
@@ -20,9 +20,9 @@ export default function () {
                 break;
         }
 
-        console.log("[Analizer] Obfuscation type:", type);
+        console.log("[Analyzer] Obfuscation type:", type);
         return type;
     }
 
-    return Analizer;
+    return Analyzer;
 }
