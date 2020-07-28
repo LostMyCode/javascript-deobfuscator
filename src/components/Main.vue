@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import Analizer from "@/Analizer.js";
+import Analizer from "@/Analyzer.js";
 import Alert from "@/components/Alert.vue";
 import TargetFuncTip from "@/components/TargetFuncTip.vue";
 
