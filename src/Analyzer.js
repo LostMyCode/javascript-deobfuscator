@@ -1,9 +1,9 @@
 export default function () {
     const Analyzer = {};
 
-    Analyzer.checkType = function(targetName, code) {
+    Analyzer.checkType = function (targetName, code) {
         let type = null;
-        
+
         if (typeof targetName != "string" || typeof code != "string") return type;
 
         switch (true) {
@@ -15,7 +15,8 @@ export default function () {
                 type = 1;
                 break;
 
-            case !!code.match(new RegExp(`${targetName}\\(.[a-zA-Z0-9]+.,.[^']+.\\)`)):
+            case !!code.match(new RegExp(`${targetName}\\(.[a-zA-Z0-9]+.,\\s*.[^']+.\\)`)):
+            // case !!code.match(new RegExp(`${targetName}\\(.[^("|')]+.,\\s*.[^("|')]+.\\)`)):
                 type = 2;
                 break;
         }
