@@ -4,6 +4,7 @@ module.exports = function () {
     const Decoder = {};
 
     Decoder.decode = function decode(type, targetName, code) {
+        code = this.replaceConstant(targetName, code);
         switch (type) {
             case 0:
                 return Decoder.decodeType0(targetName, code);
@@ -23,6 +24,11 @@ module.exports = function () {
             code = code.replace(/(\w+)\[("|')(\w+)("|')\]/g, "$1.$3");
         } */
         return code;
+    }
+
+    Decoder.replaceConstant = function (targetName, code) {
+        // replace const to var if target func is constant
+        return code.replace(new RegExp(`const ${targetName}\\s*=`), `var ${targetName}=`);
     }
 
     Decoder.decodeType0 = function (targetName, code) { // array like _0xf13b[274] not func
