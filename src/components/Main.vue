@@ -26,6 +26,7 @@
         rows="5"
         placeholder="var _0x14bb=['EMKjwoXCuTB1PsKIbSnDkMKY','RsKLwrHCpQ==','wpPCisOQI ..."
         v-model="mainCode"
+        spellcheck="false"
       ></textarea>
     </div>
     <button
@@ -55,6 +56,7 @@
         rows="5"
         v-model="outputCode"
         @click="copyToClipboard"
+        spellcheck="false"
       ></textarea>
     </div>
 
