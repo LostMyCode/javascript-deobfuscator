@@ -47,7 +47,7 @@ module.exports = function () {
         let m;
 
         while (m = code.match(regex)) {
-            const val = stringArray[m[1]].replace(/'/g, "\\x27");
+            const val = stringArray[m[1]].replace(/'/g, "\\x27").replace(/\$/g, "\\x24");
             regex = new RegExp(`${targetName}\\[${m[1]}\\]`, 'g');
             code = code.replace(regex, `'${val}'`);
             regex = defaultRegex;
@@ -73,7 +73,7 @@ module.exports = function () {
 
         while (m = code.match(regex)) {
             // let val = eval(`${targetName}('${m[1]}')`).replace(/'/g, "\\x27");
-            const val = decode(m[1]).replace(/'/g, "\\x27");
+            const val = decode(m[1]).replace(/'/g, "\\x27").replace(/\$/g, "\\x24");
             regex = new RegExp(`${targetName}\\(.${m[1]}.\\)`, 'g');
             code = code.replace(regex, `'${val}'`);
             regex = defaultRegex;
@@ -118,7 +118,7 @@ module.exports = function () {
             const val = decode(m[1], m[2]).replace(
                 /'/g,
                 "\\x27"
-            );
+            ).replace(/\$/g, "\\x24");
 
             m[2] = m[2]
                 .replace(/\(/g, "\\(")
