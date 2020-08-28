@@ -31,10 +31,16 @@ module.exports = function () {
         return code.replace(new RegExp(`const ${targetName}\\s*=`), `var ${targetName}=`);
     }
 
+    Decoder.greatEscape = function (code) {
+        // avoid error when code includes a part like "export default class..."
+        return code.split("export default")[0];
+    }
+
     Decoder.decodeType0 = function (targetName, code) { // array like _0xf13b[274] not func
         eval(`var ${targetName} = null`);
         try {
-            eval(code.replace(new RegExp(`var ${targetName}=`), `${targetName}=`));
+            // eval(code.replace(new RegExp(`var ${targetName}=`), `${targetName}=`));
+            eval(this.greatEscape(code))
         } catch (e) {
             console.log("Eval err but continue");
         }
@@ -59,7 +65,7 @@ module.exports = function () {
     Decoder.decodeType1 = function (targetName, code) { // 1 args like _0xabc('0x00') 
         eval(`var ${targetName} = null`);
         try {
-            eval(code);
+            eval(this.greatEscape(code));
         } catch (e) {
             console.log("Eval err but continue");
         }
@@ -86,8 +92,7 @@ module.exports = function () {
         let targetNameRegex = new RegExp(`var ${targetName}=`);
         eval(`var ${targetName} = null`);
         try {
-            //eval(code.replace(targetNameRegex, `window.${targetName} = `));
-            eval(code);
+            eval(this.greatEscape(code));
         } catch (e) {
             console.log("Eval err but continue");
         }
@@ -104,7 +109,7 @@ module.exports = function () {
         const defaultRegex = new RegExp(regArg);
         const amount = code.match(new RegExp(regArg, "g")).length;
         console.log(amount);
-        
+
         let regex = new RegExp(regArg);
         let m;
 
