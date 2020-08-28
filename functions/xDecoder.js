@@ -20,9 +20,13 @@ module.exports = function () {
             Replace format
             aaa["bbb"] or aaa['bbb'] to aaa.bbb
         */
-        /* while (code.match(/(\w+)\[("|')(\w+)("|')\]/)) {
+        while (code.match(/(\w+)\[("|')(\w+)("|')\]/)) {
+            // replace get["blabla"] to get blabla and set too
+            code = code.replace(/(get|set)\[("|')(\w+)("|')\]/g, "$1 $3");
+
+            // normal replace aaa["bbb"] => aaa.bbb
             code = code.replace(/(\w+)\[("|')(\w+)("|')\]/g, "$1.$3");
-        } */
+        }
         return code;
     }
 
@@ -33,6 +37,7 @@ module.exports = function () {
 
     Decoder.greatEscape = function (code) {
         // avoid error when code includes a part like "export default class..."
+        // maybe split by "export" can be better...? I need to test
         return code.split("export default")[0];
     }
 
