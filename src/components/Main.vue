@@ -93,7 +93,10 @@ export default {
       this.outputCode = null;
       this.$refs.alert.hide();
 
-      const type = this.analyzer.checkType(this.targetName, this.mainCode);
+      // use another variable to avoid changing input
+      let code = this.mainCode + "";
+
+      const type = this.analyzer.checkType(this.targetName, code);
       if (type === null) {
         return this.$refs.alert.showAlert(
           "danger",
@@ -103,11 +106,10 @@ export default {
         this.running = false;
       }
       if (type === 3) {
-        this.mainCode = window.js_beautify(this.mainCode, {
+        code = window.js_beautify(code, {
           unescape_strings: true,
         })
       }
-      console.log(this.mainCode);
 
       this.changeProgress(100);
 
@@ -120,7 +122,7 @@ export default {
           requestURL,
           {
             targetName: this.targetName,
-            code: this.mainCode,
+            code,
             type,
           }
         )
