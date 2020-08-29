@@ -102,6 +102,12 @@ export default {
         ),
         this.running = false;
       }
+      if (type === 3) {
+        this.mainCode = window.js_beautify(this.mainCode, {
+          unescape_strings: true,
+        })
+      }
+      console.log(this.mainCode);
 
       this.changeProgress(100);
 

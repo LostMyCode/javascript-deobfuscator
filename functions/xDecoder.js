@@ -12,6 +12,8 @@ module.exports = function () {
                 return Decoder.decodeType1(targetName, code);
             case 2:
                 return Decoder.decodeType2(targetName, code);
+            case 3:
+                return Decoder.decodeExperimentType(targetName, code);
         }
     }
 
@@ -93,11 +95,12 @@ module.exports = function () {
         return this.replaceFormat(code);
     }
 
-    Decoder.decodeType2 = function (targetName, code) { // 2 args like _0xabc('asd', 'asd') RC4
+    Decoder.decodeType2 = function (targetName, code, decoderFunc) { // 2 args like _0xabc('asd', 'asd') RC4
         let targetNameRegex = new RegExp(`var ${targetName}=`);
         eval(`var ${targetName} = null`);
         try {
-            eval(this.greatEscape(code));
+            if (decoderFunc) eval(decoderFunc);
+            else eval(this.greatEscape(code));
         } catch (e) {
             console.log("Eval err but continue");
         }
@@ -121,14 +124,11 @@ module.exports = function () {
         while ((m = code.match(regex))) {
             m[2] = m[2].replace(/"/, "");
             // console.log(m[1], m[2])
-            /* let val = eval(`${targetName}('${m[1]}','${m[2]}')`).replace(
-                /'/g,
-                "\\x27"
-            ); */
             const val = decode(m[1], m[2]).replace(
                 /'/g,
                 "\\x27"
             ).replace(/\$/g, "\\x24");
+            console.log(val)
 
             m[2] = m[2]
                 .replace(/\(/g, "\\(")
@@ -144,6 +144,29 @@ module.exports = function () {
         }
 
         return this.replaceFormat(code);
+    }
+
+    /**
+     * This is under experimental
+     * @param {string} code - beautified code
+     */
+    Decoder.decodeExperimentType = function (targetName, code) {
+        // get decoder func
+        let importantPart = code.split(`var ${targetName} = function`);
+        importantPart = 
+            importantPart[0] + 
+            `var ${targetName} = function` +
+            importantPart[1].split("\n};")[0] +
+            "};";
+
+        // avoid self defending
+        importantPart =
+            importantPart
+            .replace(/[ ]{4}/g, "")
+            .replace(/\r/g, "")
+            .replace(/\n/g, "");
+
+        return this.decodeType2(targetName, code, importantPart);
     }
 
     return Decoder;

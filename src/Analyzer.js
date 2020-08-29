@@ -19,6 +19,11 @@ export default function () {
             // case !!code.match(new RegExp(`${targetName}\\(.[^("|')]+.,\\s*.[^("|')]+.\\)`)):
                 type = 2;
                 break;
+
+            case !!code.match(new RegExp(`${targetName}\\(.[^("|')]+.,\\s*.[^("|')]+.\\)`)):
+                // under experimental
+                type = 3;
+                break;
         }
 
         console.log("[Analyzer] Obfuscation type:", type);
