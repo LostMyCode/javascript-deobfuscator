@@ -24,9 +24,9 @@ module.exports = function () {
         */
         while (code.match(/(\w+)\[("|')(\w+)("|')\]/)) {
             // replace get["blabla"] to get blabla and set too
-            code = code.replace(/(get|set)\[("|')(\w+)("|')\]/g, "$1 $3");
+            code = code.replace(/(\W+)(get|set)\[("|')(\w+)("|')\]/g, "$1$2 $4");
 
-            // normal replace aaa["bbb"] => aaa.bbb
+            // normal replace aaa["bbb"] to aaa.bbb
             code = code.replace(/(\w+)\[("|')(\w+)("|')\]/g, "$1.$3");
         }
         return code;
