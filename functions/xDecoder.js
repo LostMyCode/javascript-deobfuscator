@@ -43,6 +43,46 @@ module.exports = function () {
         return code.split("export default")[0];
     }
 
+    /**
+     * find real decode function's variable name
+     * @param {string} targetName target variable name
+     */
+    Decoder.findRealVar = function (targetName, code) {
+        const reg = `${targetName}\\s*=\\s*(\\w+)`;
+        const regex = new RegExp(reg);
+        const m = code.match(regex);
+        return m && m[1];
+    }
+
+    /**
+     * delete all "var _0x90129f = _0x3f0b" things
+     * and replace all random('0x2', 'cFMi') to real('0x2', 'cFMi')
+     * @param {string} realTargetName decode func name
+     * @param {string} code obfuscated code
+     */
+    Decoder.replaceAllRandomVariable = function(realTargetName, code) {
+        /**
+         * var some = realTarget
+         */
+        const reg = `var (\\w+)\\s*=\\s*${realTargetName};`;
+        const regex = new RegExp(reg, 'g');
+        const matches = code.match(regex); // [ 'var _0x3e8cb6=_0x405d;', 'var _0x5a3785=_0x405d;' ]
+
+        if (matches) {
+            // remove all randoms
+            code = code.replace(regex, "");
+
+            // get random var names
+            for (let i = 0; i < matches.length; i++) {
+                // matches[i] = matches[i].match(/var (\w+)\s*=/)[1];
+                // 変数名がaなどの場合無理という課題
+                const regex2 = new RegExp(matches[i].match(/var (\w+)\s*=/)[1], "g");
+            }
+        }
+
+        return code;
+    }
+
     Decoder.decodeType0 = function (targetName, code) { // array like _0xf13b[274] not func
         eval(`var ${targetName} = null`);
         try {
@@ -70,14 +110,22 @@ module.exports = function () {
     }
 
     Decoder.decodeType1 = function (targetName, code) { // 1 args like _0xabc('0x00') 
-        eval(`var ${targetName} = null`);
+        let realTarget = this.findRealVar(targetName, code);
+        if (realTarget) {
+            //test
+            this.replaceAllRandomVariable(realTarget, code);
+        } else {
+            realTarget = targetName;
+        }
+
+        eval(`var ${realTarget} = null`);
         try {
             eval(this.greatEscape(code));
         } catch (e) {
             console.log("Eval err but continue");
         }
 
-        const decode = eval(targetName);
+        const decode = eval(realTarget);
         const regArg = `${targetName}\\(.([a-zA-Z0-9]+).\\)`;
         const defaultRegex = new RegExp(regArg);
 
@@ -153,8 +201,8 @@ module.exports = function () {
     Decoder.decodeExperimentType = function (targetName, code) {
         // get decoder func
         let importantPart = code.split(`var ${targetName} = function`);
-        importantPart = 
-            importantPart[0] + 
+        importantPart =
+            importantPart[0] +
             `var ${targetName} = function` +
             importantPart[1].split("\n};")[0] +
             "};";
@@ -162,9 +210,9 @@ module.exports = function () {
         // avoid self defending
         importantPart =
             importantPart
-            .replace(/[ ]{4}/g, "")
-            .replace(/\r/g, "")
-            .replace(/\n/g, "");
+                .replace(/[ ]{4}/g, "")
+                .replace(/\r/g, "")
+                .replace(/\n/g, "");
 
         return this.decodeType2(targetName, code, importantPart);
     }
