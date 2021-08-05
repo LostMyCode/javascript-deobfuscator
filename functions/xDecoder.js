@@ -60,23 +60,23 @@ module.exports = function () {
      * @param {string} realTargetName decode func name
      * @param {string} code obfuscated code
      */
-    Decoder.replaceAllRandomVariable = function(realTargetName, code) {
+    Decoder.replaceAllRandomVariable = function (realTargetName, code) {
         /**
          * var some = realTarget
          */
         const reg = `var (\\w+)\\s*=\\s*${realTargetName};`;
         const regex = new RegExp(reg, 'g');
         const matches = code.match(regex); // [ 'var _0x3e8cb6=_0x405d;', 'var _0x5a3785=_0x405d;' ]
-
         if (matches) {
             // remove all randoms
             code = code.replace(regex, "");
 
             // get random var names
             for (let i = 0; i < matches.length; i++) {
-                // matches[i] = matches[i].match(/var (\w+)\s*=/)[1];
-                // 変数名がaなどの場合無理という課題
-                const regex2 = new RegExp(matches[i].match(/var (\w+)\s*=/)[1], "g");
+                const fakeTargetName = matches[i].match(/var (\w+)\s*=/)[1];
+                const regArg = `([^a-zA-Z0-9])${fakeTargetName}\\(([a-zA-Z0-9]+)\\)`;
+                const regex = new RegExp(regArg, "g");
+                code = code.replace(regex, `$1${realTargetName}($2)`);
             }
         }
 
@@ -109,11 +109,11 @@ module.exports = function () {
         return this.replaceFormat(code);
     }
 
-    Decoder.decodeType1 = function (targetName, code) { // 1 args like _0xabc('0x00') 
+    Decoder.decodeType1 = function (targetName, code) { // 1 args like _0xabc('0x00') | _0xabc(0x00)
         let realTarget = this.findRealVar(targetName, code);
         if (realTarget) {
             //test
-            this.replaceAllRandomVariable(realTarget, code);
+            code = this.replaceAllRandomVariable(realTarget, code);
         } else {
             realTarget = targetName;
         }
@@ -126,16 +126,15 @@ module.exports = function () {
         }
 
         const decode = eval(realTarget);
-        const regArg = `${targetName}\\(.([a-zA-Z0-9]+).\\)`;
+        const regArg = `[^a-zA-Z0-9]${realTarget}\\(["|']*([a-zA-Z0-9]+)["|']*\\)`;
         const defaultRegex = new RegExp(regArg);
 
         let regex = new RegExp(regArg);
         let m;
-
         while (m = code.match(regex)) {
             // let val = eval(`${targetName}('${m[1]}')`).replace(/'/g, "\\x27");
             const val = decode(m[1]).replace(/'/g, "\\x27").replace(/\$/g, "\\x24");
-            regex = new RegExp(`${targetName}\\(.${m[1]}.\\)`, 'g');
+            regex = new RegExp(`${realTarget}\\(["|']*${m[1]}["|']*\\)`, 'g');
             code = code.replace(regex, `'${val}'`);
             regex = defaultRegex;
         }
