@@ -10,8 +10,6 @@ module.exports = function () {
         let realTargetName = this.findRealVar(targetName, code);
         if (realTargetName) {
             code = this.replaceAllRandomVariable(realTargetName, code, type);
-        } else {
-            realTargetName = targetName;
         }
 
         switch (type) {
@@ -57,9 +55,10 @@ module.exports = function () {
      * @param {string} targetName target variable name
      */
     Decoder.findRealVar = function (targetName, code) {
-        const reg = `${targetName}\\s*=\\s*(\\w+)`;
+        const reg = `${targetName}\\s*=\\s*(\\w+);`;
         const regex = new RegExp(reg);
         const m = code.match(regex);
+        console.log(m);
         return m && m[1];
     }
 
