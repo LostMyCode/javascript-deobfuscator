@@ -44,10 +44,22 @@ module.exports = function () {
         return code.replace(new RegExp(`const ${targetName}\\s*=`), `var ${targetName}=`);
     }
 
+    /**
+     * The Great Escape
+     * @param {string} code target code
+     */
     Decoder.greatEscape = function (code) {
-        // avoid error when code includes a part like "export default class..."
+        // avoid error when the code includes "use strict";
+        // if it is at the beginning of the code then delete it
+        // index: 0 means the beginning of the code
+        const m = code.match(/"use strict";/);
+        code = m && m.index === 0 ? code.replace(/"use strict";/, "") : code;
+
+        // avoid error when the code includes a part like "export default class..."
         // maybe split by "export" can be better...? I need to test
-        return code.split("export default")[0];
+        code = code.split("export default")[0];
+
+        return code;
     }
 
     /**
