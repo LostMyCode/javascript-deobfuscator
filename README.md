@@ -7,7 +7,7 @@ Demo: [https://deo.sigr.io](https://deo.sigr.io)
 
 ## An example of deobfuscation
 
-![output](https://qiita-user-contents.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fmedia%2FEZblVSIUwAEw45C%3Fformat%3Djpg%26name%3Dlarge?ixlib=rb-1.2.2&auto=format&gif-q=60&q=75&w=1400&fit=max&s=a8293b9d27313808f1f019b6e8e287bc)
+![output](https://github.com/LostMyCode/javascript-deobfuscator/assets/63048878/4b583421-8ae5-4581-b61e-1f6c9d733941)
 
 ## Project setup
 ```
