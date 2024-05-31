@@ -31,16 +31,3 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-
-## Web client & decoding server
-Web client and decoding server run using firebase hosting & cloud functions.
-
-### Run test server on local
-```
-firebase serve
-```
-
-### Deploy to firebase
-```
-firebase deploy
-```
