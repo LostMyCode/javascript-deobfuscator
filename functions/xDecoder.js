@@ -63,6 +63,13 @@ module.exports = function () {
     }
 
     /**
+     * @param {string} val 
+     */
+    Decoder.escapeVal = function (val) {
+        return val.replace(/'/g, "\\x27").replace(/\$/g, "\\x24").replace(/\n/g, "\\n");
+    }
+
+    /**
      * find real decode function's variable name
      * @param {string} targetName target variable name
      */
@@ -111,7 +118,7 @@ module.exports = function () {
                 result.push(`([^a-zA-Z0-9])${targetName}\\(([a-zA-Z0-9]+)\\)`);
                 result.push(`$1${replaceName}($2)`);
                 break;
-            
+
             case 2:
                 result.push(`([^a-zA-Z0-9])${targetName}\\(([a-zA-Z0-9]+),\\s*'([^']+)'\\)`);
                 result.push(`$1${replaceName}($2,'$3')`);
@@ -137,7 +144,7 @@ module.exports = function () {
         let m;
 
         while (m = code.match(regex)) {
-            const val = stringArray[m[1]].replace(/'/g, "\\x27").replace(/\$/g, "\\x24");
+            const val = this.escapeVal(stringArray[m[1]]);
             regex = new RegExp(`${targetName}\\[${m[1]}\\]`, 'g');
             code = code.replace(regex, `'${val}'`);
             regex = defaultRegex;
@@ -162,8 +169,7 @@ module.exports = function () {
         let regex = new RegExp(regArg);
         let m;
         while (m = code.match(regex)) {
-            // let val = eval(`${targetName}('${m[1]}')`).replace(/'/g, "\\x27");
-            const val = decode(m[1]).replace(/'/g, "\\x27").replace(/\$/g, "\\x24");
+            const val = this.escapeVal(decode(m[1]));
             regex = new RegExp(`${targetName}\\(["|']*${m[1]}["|']*\\)`, 'g');
             code = code.replace(regex, `'${val}'`);
             regex = defaultRegex;
@@ -193,10 +199,7 @@ module.exports = function () {
         while ((m = code.match(regex))) {
             m[2] = m[2].replace(/"/, "");
             // console.log(m[1], m[2])
-            const val = decode(m[1], m[2]).replace(
-                /'/g,
-                "\\x27"
-            ).replace(/\$/g, "\\x24");
+            const val = this.escapeVal(decode(m[1], m[2]));
             // console.log(val)
 
             m[2] = m[2]
@@ -243,10 +246,7 @@ module.exports = function () {
         while ((m = code.match(regex))) {
             m[2] = m[2].replace(/"/, "");
             // console.log(m[1], m[2])
-            const val = decode(m[1], m[2]).replace(
-                /'/g,
-                "\\x27"
-            ).replace(/\$/g, "\\x24");
+            const val = this.escapeVal(decode(m[1], m[2]));
             console.log(val)
 
             m[2] = m[2]
