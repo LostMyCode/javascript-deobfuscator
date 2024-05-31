@@ -16,7 +16,7 @@ module.exports = function () {
             case 0:
                 return Decoder.decodeType0(targetName, code);
             case 1:
-                return Decoder.decodeType1(realTargetName, code);
+                return Decoder.decodeType1(realTargetName || targetName, code);
             case 2:
                 return realTargetName ? Decoder.decodeType2_AfterPatch(realTargetName, code) : Decoder.decodeType2(targetName, code);
             case 3:
