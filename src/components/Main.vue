@@ -70,6 +70,7 @@
 import Analyzer from "@/Analyzer.js";
 import Alert from "@/components/Alert.vue";
 import TargetFuncTip from "@/components/TargetFuncTip.vue";
+import Worker from "worker-loader!../worker";
 
 export default {
   components: {
@@ -84,6 +85,7 @@ export default {
       mainCode: null,
       outputCode: null,
       running: false,
+      worker: null
     };
   },
 
@@ -113,40 +115,7 @@ export default {
 
       this.changeProgress(100);
 
-      const requestURL = window.location.origin.includes("localhost") ?
-        "http://localhost:5001/deobfuscator/us-central1/api/request" :
-        "https://us-central1-deobfuscator.cloudfunctions.net/api/request";
-      
-      this.axios
-        .post(
-          requestURL,
-          {
-            targetName: this.targetName,
-            code,
-            type,
-          }
-        )
-        .then((res) => {
-          this.running = false;
-          res.data = res.data.replace(/\n/g, "");
-          this.changeProgress(0);
-          this.$refs.alert.showAlert(
-            "success",
-            "[Success]",
-            "Successfully decoded the code!!"
-          );
-          this.outputCode = window.js_beautify(res.data);
-        })
-        .catch((e) => {
-          this.running = false;
-          this.changeProgress(0);
-          console.log(e);
-          this.$refs.alert.showAlert(
-            "danger",
-            "[Error]",
-            "Server error! Please check target code and name of target function."
-          );
-        });
+      this.worker.postMessage({ type, targetName: this.targetName, code });
     },
     changeProgress(rate) {
       if (!document.getElementById("running-progress-bar")) {
@@ -166,6 +135,33 @@ export default {
 
   mounted() {
     this.analyzer = Analyzer();
-  },
+    this.worker = new Worker();
+
+    this.worker.onmessage = (e) => {
+      const { data } = e;
+      let { status, result } = data;
+
+      if (status === "success") {
+        this.running = false;
+        result = result.replace(/\n/g, "");
+        this.changeProgress(0);
+        this.$refs.alert.showAlert(
+          "success",
+          "[Success]",
+          "Successfully decoded the code!!"
+        );
+        this.outputCode = window.js_beautify(result);
+      } else {
+        this.running = false;
+        this.changeProgress(0);
+        console.log(result);
+        this.$refs.alert.showAlert(
+          "danger",
+          "[Error]",
+          "Decoder error! Please check target code and name of target function."
+        );
+      }
+    };
+  }
 };
 </script>
